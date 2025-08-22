@@ -1,0 +1,55 @@
+PetPal – Pet Activity Tracker
+
+PetPal is a micro-app that helps pet parents track their pet’s daily activities, get smart reminders, and interact with an AI assistant for contextual pet care insights.
+
+Tech Stack
+
+Frontend: React + TypeScript + Vite
+
+UI: Shadcn/ui + Tailwind CSS
+
+Backend: Express.js + TypeScript
+
+State Management: TanStack Query (for server state)
+
+Routing: Wouter (lightweight client-side routing)
+
+Storage: In-memory (easily replaceable with a database)
+
+Features
+
+Login flow with responsive, mobile-first design
+
+Activity logging: walks, meals, and medications
+
+Daily summary with numeric and visual representation of activities
+
+AI pet assistant with contextual memory of chat history
+
+Reminder if no walk has been logged by 18:00 local time
+
+Clean and accessible user interface with smooth animations
+
+Run Locally
+Backend
+cd backend
+npm install
+npm run dev
+
+Frontend
+cd frontend
+npm install
+npm run dev
+
+
+Open http://localhost:5173
+ to view the app.
+Backend runs on http://localhost:5000.
+
+Trade-offs
+
+In-memory storage is used for simplicity (resets on restart).
+
+AI chatbot is rule-based for fast implementation; can be extended with NLP.
+
+Mobile-first UI design prioritized; desktop layout is minimal.
