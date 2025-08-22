@@ -1,0 +1,117 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { useTheme } from "@/components/theme-provider";
+import { Moon, Sun, Heart, PawPrint } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import petIconsImage from "@assets/generated_images/Pet_icons_collection_illustration_6d580ee8.png";
+import petBackgroundImage from "@assets/generated_images/Pet_background_pattern_design_c5892186.png";
+
+export default function Login() {
+  const [, setLocation] = useLocation();
+  const { theme, toggleTheme } = useTheme();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Dummy login - any username/password works
+    localStorage.setItem("petpal_authenticated", "true");
+    setLocation("/dashboard");
+  };
+
+  return (
+    <div 
+      className="min-h-screen bg-gradient-to-br from-pet-light via-white to-pet-primary/10 dark:from-pet-dark dark:via-slate-900 dark:to-pet-primary/20 flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: `url(${petBackgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
+      {/* Theme Toggle */}
+      <button 
+        onClick={toggleTheme}
+        className="fixed top-4 right-4 p-3 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-slate-700 transition-all duration-200 shadow-lg z-10"
+      >
+        {theme === "light" ? (
+          <Moon className="h-5 w-5 text-slate-600" />
+        ) : (
+          <Sun className="h-5 w-5 text-yellow-400" />
+        )}
+      </button>
+
+      <div className="w-full max-w-md">
+        {/* Hero Section */}
+        <div className="text-center mb-8">
+          <div className="relative mb-6">
+            <div className="w-32 h-32 mx-auto pet-gradient rounded-full flex items-center justify-center shadow-2xl">
+              <PawPrint className="text-white w-16 h-16" />
+            </div>
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-pet-accent rounded-full flex items-center justify-center shadow-lg animate-bounce">
+              <Heart className="text-white w-4 h-4" />
+            </div>
+          </div>
+          
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-white mb-2">
+            Welcome to PetPal
+          </h1>
+          <p className="text-slate-600 dark:text-slate-300 text-lg">
+            Your pet's health and happiness companion
+          </p>
+        </div>
+
+        {/* Login Card */}
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-2xl">
+          <CardHeader className="space-y-1 pb-4">
+            <h2 className="text-2xl font-semibold text-center text-slate-800 dark:text-white">
+              Sign In
+            </h2>
+            <p className="text-sm text-center text-slate-600 dark:text-slate-400">
+              Enter any username and password to continue
+            </p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Input
+                type="text"
+                placeholder="pet_lover123"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 focus:ring-pet-primary h-12"
+                required
+              />
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 focus:ring-pet-primary h-12"
+                required
+              />
+              <Button 
+                type="submit" 
+                className="w-full h-12 text-lg pet-gradient text-white hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+              >
+                Sign In to PetPal
+              </Button>
+            </form>
+            
+            {/* Pet showcase features */}
+            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-600">
+              <img src={petIconsImage} alt="Cute pet icons" className="h-16 w-auto object-contain rounded-lg mx-auto mb-4" />
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <span>🐾 Activity Tracking</span>
+                <span>🤖 AI Pet Assistant</span>
+                <span>⏰ Smart Reminders</span>
+                <span>📊 Health Insights</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
