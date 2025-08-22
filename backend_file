@@ -1,0 +1,51 @@
+import type { Express } from "express";
+import { storage } from "./storage";
+import { insertActivitySchema } from "@shared/schema";
+
+export async function registerRoutes(app: Express) {
+  
+  // Get all activities
+  app.get("/api/activities", async (req, res) => {
+    try {
+      const activities = await storage.getActivities();
+      res.json(activities);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch activities" });
+    }
+  });
+
+  // Create new activity
+  app.post("/api/activities", async (req, res) => {
+    try {
+      const validatedData = insertActivitySchema.parse(req.body);
+      const activity = await storage.createActivity(validatedData);
+      res.json(activity);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create activity" });
+    }
+  });
+
+  // Get daily summary with counts
+  app.get("/api/activities/summary", async (req, res) => {
+    try {
+      const todayActivities = await storage.getTodayActivities();
+      
+      const walkCount = todayActivities.filter(a => a.activityType === "walk").length;
+      const mealCount = todayActivities.filter(a => a.activityType === "feeding").length;
+      const medicationCount = todayActivities.filter(a => a.activityType === "medication").length;
+      const playCount = todayActivities.filter(a => a.activityType === "play").length;
+      const groomingCount = todayActivities.filter(a => a.activityType === "grooming").length;
+
+      res.json({
+        walkCount,
+        mealCount,
+        medicationCount,
+        playCount,
+        groomingCount,
+        totalActivities: todayActivities.length
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to generate summary" });
+    }
+  });
+}
