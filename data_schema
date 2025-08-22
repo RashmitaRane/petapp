@@ -1,0 +1,27 @@
+import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const activities = pgTable("activities", {
+  id: varchar("id").primaryKey(),
+  petName: text("pet_name").notNull(),
+  activityType: text("activity_type").notNull(), // walk, feeding, medication, play, grooming
+  duration: integer("duration"),
+  unit: text("unit").default("minutes"),
+  activityDateTime: timestamp("activity_date_time").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertActivitySchema = createInsertSchema(activities).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  petName: z.string().min(1, "Pet name is required"),
+  activityType: z.string().min(1, "Activity type is required"),
+  duration: z.number().positive("Duration must be positive").optional(),
+  unit: z.string().default("minutes"),
+  activityDateTime: z.string().transform(str => new Date(str)),
+});
+
+export type Activity = typeof activities.$inferSelect;
+export type InsertActivity = z.infer<typeof insertActivitySchema>;
