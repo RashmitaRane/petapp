@@ -1,0 +1,68 @@
+import { useTheme } from "@/components/theme-provider";
+import { useLocation } from "wouter";
+import { Moon, Sun, LogOut } from "lucide-react";
+import DailySummary from "@/components/daily-summary";
+import ActivityForm from "@/components/activity-form";
+import ActivityList from "@/components/activity-list";
+
+export default function Dashboard() {
+  const { theme, toggleTheme } = useTheme();
+  const [, setLocation] = useLocation();
+
+  const handleLogout = () => {
+    localStorage.removeItem("petpal_authenticated");
+    setLocation("/");
+  };
+
+  return (
+    <div className="min-h-screen bg-pet-light dark:bg-pet-dark transition-colors duration-300">
+      {/* Header */}
+      <header className="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 pet-gradient rounded-full flex items-center justify-center">
+              <i className="fas fa-paw text-white text-sm"></i>
+            </div>
+            <h1 className="text-xl font-bold text-slate-800 dark:text-white">PetPal</h1>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5 text-slate-600" />
+              ) : (
+                <Sun className="h-5 w-5 text-yellow-400" />
+              )}
+            </button>
+            
+            <button 
+              onClick={handleLogout}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+            >
+              <LogOut className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content - Responsive 2-column layout */}
+      <main className="max-w-6xl mx-auto px-4 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - Summary and Activity Form */}
+          <div className="space-y-6">
+            <DailySummary />
+            <ActivityForm />
+          </div>
+          
+          {/* Right Column - Activity List */}
+          <div className="space-y-6">
+            <ActivityList />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
